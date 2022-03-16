@@ -5,7 +5,7 @@ const thoughtsC = {
         Thought.find({})
         .populate({ path: 'reactions', select: ':D' })
         .select(':D')
-        .then(dbThoughtData => res.json(dbThoughtData))
+        .then(ThoughtDataDB => res.json(ThoughtDataDB))
         .catch(err => {
             console.log(err);
             res.status(500).json(err);
@@ -16,12 +16,12 @@ const thoughtsC = {
         Thought.findOne({ _id: params.id })
         .populate({ path: 'reactions', select: ':D' })
         .select(':D')
-        .then(dbThoughtData => {
-            if (!dbThoughtData) {
+        .then(ThoughtDataDB => {
+            if (!ThoughtDataDB) {
                 res.status(404).json({message: 'There was no thought found'});
                 return;
             }
-            res.json(dbThoughtData);
+            res.json(ThoughtDataDB);
         })
         .catch(err => {
             console.log(err);
@@ -30,10 +30,10 @@ const thoughtsC = {
     },
     createThought({ body }, res) {
         Thought.create(body)
-        .then(dbThoughtData => {
+        .then(ThoughtDataDB => {
             User.findOneAndUpdate(
                 { _id: body.userId },
-                { $push: { thoughts: dbThoughtData._id } },
+                { $push: { thoughts: ThoughtDataDB._id } },
                 { new: true }
             )
             .then(dbUserData => {
@@ -53,25 +53,25 @@ const thoughtsC = {
             body,
             { new: true }
         )
-        .then(dbThoughtData => {
-            if (!dbThoughtData) {
+        .then(ThoughtDataDB => {
+            if (!ThoughtDataDB) {
                 res.status(404).json({ message: 'There was no thought found' });
                 return;
             }
-            res.json(dbThoughtData);
+            res.json(ThoughtDataDB);
         })
         .catch(err => res.status(400).json(err));
     },
     deleteThought({ params }, res) {
 
         Thought.findOneAndDelete({ _id: params.id })
-        .then(dbThoughtData => {
-            if (!dbThoughtData) {
+        .then(ThoughtDataDB => {
+            if (!ThoughtDataDB) {
                 res.status(404).json({ message: 'There was no thought found'});
                 return;
             }
             User.findOneAndUpdate(
-                { username: dbThoughtData.username },
+                { username: ThoughtDataDB.username },
                 { $pull: { thoughts: params.id } }
             )
             .then(() => {
@@ -87,12 +87,12 @@ const thoughtsC = {
             { $addToSet: { reactions: body } },
             { new: true, runValidators: true }
         )
-        .then(dbThoughtData => {
-            if (!dbThoughtData) {
+        .then(ThoughtDataDB => {
+            if (!ThoughtDataDB) {
                 res.status(404).json({ message: 'There was no thought found here' });
                 return;
             }
-            res.json(dbThoughtData);
+            res.json(ThoughtDataDB);
         })
         .catch(err => res.status(500).json(err));
     },
@@ -102,8 +102,8 @@ const thoughtsC = {
             { $pull: { reactions: { reactionId: body.reactionId } } },
             { new: true, runValidators: true }
         )
-        .then(dbThoughtData => {
-            if (!dbThoughtData) {
+        .then(ThoughtDataDB => {
+            if (!ThoughtDataDB) {
                 res.status(404).json({ message: 'There was no thought that was found' });
                 return;
             }

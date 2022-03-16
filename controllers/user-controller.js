@@ -4,7 +4,7 @@ const usersC = {
     getAllUsers(req, res) {
         User.find({})
         .select('-__v')
-        .then(dbUserData => res.json(dbUserData))
+        .then(UserDataDB => res.json(UserDataDB))
         .catch(err => {
             console.log(err);
             res.status(500).json(err);
@@ -17,12 +17,12 @@ const usersC = {
             { path: 'friends', select: ":D" }
         ])
         .select(':D')
-        .then(dbUserData => {
-            if (!dbUserData) {
+        .then(UserDataDB => {
+            if (!UserDataDB) {
                 res.status(404).json({message: 'There was no thought found'});
                 return;
             }
-            res.json(dbUserData);
+            res.json(UserDataDB);
         })
         .catch(err => {
             console.log(err);
@@ -32,35 +32,35 @@ const usersC = {
 
     createUser({ body }, res) {
         User.create(body)
-        .then(dbUserData => res.json(dbUserData))
+        .then(UserDataDB => res.json(UserDataDB))
         .catch(err => res.status(400).json(err));
     },
 
     updateUser({ params, body }, res) {
         User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
-        .then(dbUserData => {
-            if (!dbUserData) {
+        .then(UserDataDB => {
+            if (!UserDataDB) {
                 res.status(404).json({ message: 'There was no thought found' });
                 return;
             }
-            res.json(dbUserData);
+            res.json(UserDataDB);
         })
         .catch(err => res.status(400).json(err));
     },
 
     deleteUser({ params }, res) {
         User.findOneAndDelete({ _id: params.id })
-        .then(dbUserData => {
-            if (!dbUserData) {
+        .then(UserDataDB => {
+            if (!UserDataDB) {
                 res.status(404).json({ message: 'There was no thought found'});
                 return;
             }
             User.updateMany(
-                { _id : {$in: dbUserData.friends } },
+                { _id : {$in: UserDataDB.friends } },
                 { $pull: { friends: params.id } }
             )
             .then(() => {
-                Thought.deleteMany({ username : dbUserData.username })
+                Thought.deleteMany({ username : UserDataDB.username })
                 .then(() => {
                     res.json({message: "Has been deleted"});
                 })
@@ -76,8 +76,8 @@ const usersC = {
             { $pull: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
-        .then(dbUserData => {
-            if (!dbUserData) {
+        .then(UserDataDB => {
+            if (!UserDataDB) {
                 res.status(404).json({ message: 'There was no user that was found' });
                 return;
             }
@@ -87,8 +87,8 @@ const usersC = {
                 { $pull: { friends: params.userId } },
                 { new: true, runValidators: true }
             )
-            .then(dbUserData2 => {
-                if(!dbUserData2) {
+            .then(UserDataDB2 => {
+                if(!UserDataDB2) {
                     res.status(404).json({ message: 'There was no use that was found' })
                     return;
                 }
@@ -105,8 +105,8 @@ const usersC = {
             { $addToSet: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
-        .then(dbUserData => {
-            if (!dbUserData) {
+        .then(UserDataDB => {
+            if (!UserDataDB) {
                 res.status(404).json({ message: 'There was no user that was found' });
                 return;
             }
@@ -116,12 +116,12 @@ const usersC = {
                 { $addToSet: { friends: params.userId } },
                 { new: true, runValidators: true }
             )
-            .then(dbUserData2 => {
-                if(!dbUserData2) {
+            .then(UserDataDB2 => {
+                if(!UserDataDB2) {
                     res.status(404).json({ message: 'There was no user that was found' })
                     return;
                 }
-                res.json(dbUserData);
+                res.json(UserDataDB);
             })
             .catch(err => res.json(err));
         })
