@@ -1,5 +1,5 @@
 const { User, Thought, Reaction } = require('../models');
-
+//same as before
 const thoughtsC = {
     getAllThoughts(req, res) {
         Thought.find({})

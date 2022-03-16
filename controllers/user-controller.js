@@ -100,7 +100,7 @@ const usersC = {
         })
         .catch(err => res.json(err));
     },
-
+//most is the same just reorganized
     deleteFriend({ params }, res) {
         User.findOneAndUpdate(
             { _id: params.userId },
