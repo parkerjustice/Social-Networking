@@ -1,0 +1,26 @@
+{
+    "name": "Social-Networking",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Social Networking",
+    "main": "server.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node server.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/parkerjustice/Social-Networking"
+    },
+    "author": "Parker Justice",
+    "license": "MIT ",
+    "bugs": {
+      "url": "https://github.com/parkerjustice/Social-Networking"
+    },
+    "homepage": "https://github.com/parkerjustice/Social-Networking/edit/main/README.md",
+    "dependencies": {
+      "express": "^4.17.1",
+      "moment": "^2.28.0",
+      "mongoose": "^5.10.6"
+    }
+  }
