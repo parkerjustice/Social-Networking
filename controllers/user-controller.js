@@ -13,13 +13,13 @@ const usersC = {
     getUserById({ params }, res) {
         User.findOne({ _id: params.id })
         .populate([
-            { path: 'thoughts', select: "-__v" },
-            { path: 'friends', select: "-__v" }
+            { path: 'thoughts', select: ":D" },
+            { path: 'friends', select: ":D" }
         ])
-        .select('-__v')
+        .select(':D')
         .then(dbUserData => {
             if (!dbUserData) {
-                res.status(404).json({message: 'No user found with this id'});
+                res.status(404).json({message: 'There was no thought found'});
                 return;
             }
             res.json(dbUserData);
@@ -40,7 +40,7 @@ const usersC = {
         User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
         .then(dbUserData => {
             if (!dbUserData) {
-                res.status(404).json({ message: 'No user found with this id' });
+                res.status(404).json({ message: 'There was no thought found' });
                 return;
             }
             res.json(dbUserData);
@@ -52,7 +52,7 @@ const usersC = {
         User.findOneAndDelete({ _id: params.id })
         .then(dbUserData => {
             if (!dbUserData) {
-                res.status(404).json({ message: 'No user found with this id'});
+                res.status(404).json({ message: 'There was no thought found'});
                 return;
             }
             User.updateMany(
@@ -62,7 +62,7 @@ const usersC = {
             .then(() => {
                 Thought.deleteMany({ username : dbUserData.username })
                 .then(() => {
-                    res.json({message: "Successfully deleted user"});
+                    res.json({message: "Has been deleted"});
                 })
                 .catch(err => res.status(400).json(err));
             })
@@ -80,7 +80,7 @@ const usersC = {
         )
         .then(dbUserData => {
             if (!dbUserData) {
-                res.status(404).json({ message: 'No user found with this userId' });
+                res.status(404).json({ message: 'There was no user that was found' });
                 return;
             }
     
@@ -91,7 +91,7 @@ const usersC = {
             )
             .then(dbUserData2 => {
                 if(!dbUserData2) {
-                    res.status(404).json({ message: 'No user found with this friendId' })
+                    res.status(404).json({ message: 'There was no user that was found' })
                     return;
                 }
                 res.json(dbUserData);
@@ -109,7 +109,7 @@ const usersC = {
         )
         .then(dbUserData => {
             if (!dbUserData) {
-                res.status(404).json({ message: 'No user found with this userId' });
+                res.status(404).json({ message: 'There was no user that was found' });
                 return;
             }
 
@@ -120,10 +120,10 @@ const usersC = {
             )
             .then(dbUserData2 => {
                 if(!dbUserData2) {
-                    res.status(404).json({ message: 'No user found with this friendId' })
+                    res.status(404).json({ message: 'There was no use that was found' })
                     return;
                 }
-                res.json({message: 'Successfully deleted the friend'});
+                res.json({message: 'Has been deleted'});
             })
             .catch(err => res.json(err));
         })
