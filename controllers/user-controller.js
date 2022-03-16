@@ -70,7 +70,34 @@ const usersC = {
         })
         .catch(err => res.status(400).json(err));
     },
+    removetheFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $pull: { friends: params.friendId } },
+            { new: true, runValidators: true }
+        )
+        .then(dbUserData => {
+            if (!dbUserData) {
+                res.status(404).json({ message: 'There was no user that was found' });
+                return;
+            }
 
+            User.findOneAndUpdate(
+                { _id: params.friendId },
+                { $pull: { friends: params.userId } },
+                { new: true, runValidators: true }
+            )
+            .then(dbUserData2 => {
+                if(!dbUserData2) {
+                    res.status(404).json({ message: 'There was no use that was found' })
+                    return;
+                }
+                res.json({message: 'Has been deleted'});
+            })
+            .catch(err => res.json(err));
+        })
+        .catch(err => res.json(err));
+    },
     addFriend({ params }, res) {
 
         User.findOneAndUpdate(
@@ -101,34 +128,6 @@ const usersC = {
         .catch(err => res.json(err));
     },
 //most is the same just reorganized
-    deleteFriend({ params }, res) {
-        User.findOneAndUpdate(
-            { _id: params.userId },
-            { $pull: { friends: params.friendId } },
-            { new: true, runValidators: true }
-        )
-        .then(dbUserData => {
-            if (!dbUserData) {
-                res.status(404).json({ message: 'There was no user that was found' });
-                return;
-            }
-
-            User.findOneAndUpdate(
-                { _id: params.friendId },
-                { $pull: { friends: params.userId } },
-                { new: true, runValidators: true }
-            )
-            .then(dbUserData2 => {
-                if(!dbUserData2) {
-                    res.status(404).json({ message: 'There was no use that was found' })
-                    return;
-                }
-                res.json({message: 'Has been deleted'});
-            })
-            .catch(err => res.json(err));
-        })
-        .catch(err => res.json(err));
-    }
 }
 
 module.exports = usersC;
